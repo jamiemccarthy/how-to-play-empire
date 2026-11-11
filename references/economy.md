@@ -193,7 +193,10 @@ they compose:
 - **`threshold <ITEM> <SECTS> <NUMBER>`** — the stock level the sector tries
   to keep of one item. The same number is a floor and a ceiling: below it the
   sector imports from its distribution sector, above it the sector exports
-  the excess. A threshold of 0 doesn't take effect — it has to be at least 1.
+  the excess. It acts only between this sector and its own distribution
+  sector; a threshold on a sector that others distribute to does nothing
+  for them. 0 means no threshold: the item never moves, and setting 0 is
+  how to clear one. The smallest working threshold is 1.
   Items by letter: `c` civilians, `m` military, `u` unfree workers,
   `f` food, `s` shells, `g` guns, `p` petrol, `i` iron ore, `d` gold dust,
   `b` gold bars, `o` oil, `l` lcm, `h` hcm, `r` radioactive material.
@@ -226,7 +229,7 @@ does, after growth, production and delivery. Every sector with a distribution
 sector first exports its excess (scanning left to right, top to bottom), then
 every sector imports what it is short of in the same scan order. A sector
 that has no distribution sector of its own, but is named by others, is a pool
-they draw from; it exports nothing. Mobility for sending *to* the
+they draw from; it exports nothing, and its own thresholds do nothing. Mobility for sending *to* the
 distribution sector is paid by the sender, and for taking goods *from* it by
 the distribution sector; either side with no mobility left moves nothing,
 and one with too little moves only what it can pay for. Warehouses and

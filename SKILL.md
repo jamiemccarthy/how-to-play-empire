@@ -321,12 +321,29 @@ After breaking:
    cost what 20 soldiers would. One step into wilderness costs 8 mobility,
    and a capital gains 60 mobility an update (one per ETU), up to 127.
 5. **Set up distribution** once the first sectors are designated, so goods
-   and people move at each update without commands. Each sector names one
-   distribution sector (`distribute`), and for each item you set a
-   threshold (`threshold`): the stock the sector keeps. Below the threshold
-   the sector imports from its distribution sector, and above it the sector
-   exports the surplus there. Most players start with one hub that every
-   other sector trades with.
+   and people move at each update without commands. Two commands set it up:
+   - `distribute <sector> <other>` names the one sector that `<sector>`
+     trades with, its **distribution sector**. The sector box shows it as
+     "Distributes to …".
+   - `threshold <item> <sector> <number>` sets how much of one item
+     `<sector>` keeps. Below the threshold the sector pulls the shortfall
+     from its distribution sector; above it, the sector sends the surplus
+     there.
+
+   **A threshold only moves goods between its own sector and that sector's
+   distribution sector.** It never reaches the sectors that name this one as
+   their distribution sector. So thresholds go on the sectors that make
+   goods or need them, not on the sector the goods pass through. The common
+   mistake is to put `threshold i <warehouse> 500` on the warehouse and
+   expect the mines that distribute to it to fill it up. Nothing moves:
+   each mine needs its own iron threshold (`threshold i <mine> 1`), and the
+   warehouse's threshold is ignored unless the warehouse distributes
+   somewhere itself.
+
+   Most players start with one **hub**. That isn't an Empire term: it means
+   a sector, usually a warehouse, that every other sector names as its
+   distribution sector, so producers send to it and consumers pull from it.
+   A hub isn't required, only easier and cheaper (below).
 
    **What happens at an update** (`update/finish.c` and `update/distribute.c`):
    - **Nothing moves when you type the commands.** Distribution runs once
@@ -373,11 +390,16 @@ After breaking:
    civilians above 600 to the warehouse at each update. A sector sends
    civilians only while its `work` is 100.
 
-   **Setting thresholds.** A threshold is both a floor and a ceiling, and it
-   has to be at least 1 to do anything:
+   **Setting thresholds.** A threshold is both a floor and a ceiling, set on
+   the sector that holds the goods:
+   - **0 means no threshold**, not "keep none". The sector never sends or
+     pulls that item, and `threshold <item> <sector> 0` is how to clear one.
+     The smallest working threshold is 1.
    - **Producers** get a threshold of 1 on what they make, so they send all
-     but one to the hub. A mine with a hub but no iron threshold keeps
-     everything it makes.
+     but one to their distribution sector. A mine with a distribution
+     sector but no iron threshold keeps everything it makes.
+   - **The hub needs no thresholds** for what it collects. Goods sent to it
+     arrive whatever its settings say.
    - **Consumers** get a threshold of about what they use in an update,
      plus some to spare. At 60 ETUs an update, a factory with 200
      civilians at 100% uses up to about 120 iron an update. At tech 0 it
@@ -401,6 +423,24 @@ After breaking:
    threshold c 3,1 200     the mine draws civilians from 0,0 up to 200
    threshold c 5,1 200     ... and so does the factory
    ```
+
+   **Without a hub**, sectors can trade straight down a chain. Any sector
+   can be another's distribution sector:
+
+   ```
+   distribute 3,1 5,1      the mine trades with the factory
+   threshold i 3,1 1       ... and sends it all its iron but 1
+   distribute 5,1 7,1      the factory trades with the harbor
+   threshold l 5,1 1       ... and sends it all its lcm but 1
+   ```
+
+   The factory has no iron threshold on purpose: one of 30 would send its
+   iron above 30 on to the harbor, because a threshold is a ceiling too. A
+   sector that only receives an item should have no threshold for it. A
+   chain gives each sector only one partner for every item, and a sector
+   can pull only from its own distribution sector, which is why a hub
+   holding everything is easier once there are several producers and
+   consumers.
 
    A sector designated later needs its own `distribute` and thresholds.
    `level` shows every sector's settings, and the update telegrams report

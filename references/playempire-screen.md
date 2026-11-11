@@ -35,6 +35,12 @@ just advances the world (`nation-levels.md` § The update).
 
 - Type an Empire command and press **Send** (or Enter). Tab completes a
   command name; the up and down arrows walk back through earlier commands.
+- The line just above the box follows what you type: the commands your
+  letters could still become ("de" lists declare, deliver, demobilize and
+  designate), then the command's form once only one fits. While you type a
+  designation or a commodity it lists the letters you can use, or names the
+  one you typed ("j light manufacturing", "c civilians"). It is blank for
+  sectors, numbers and anything else without a fixed set of answers.
 - When a command asks a follow-up question (most do, if you leave off
   arguments — `move` asks for a path, `designate` for a type), the question
   appears at the end of the transcript and the button changes to **Answer**:
@@ -98,9 +104,12 @@ just advances the world (`nation-levels.md` § The update).
 - **Clicking a sector** selects it and fills the **sector box** beside the
   map:
   - a sector the player owns: coordinates, designation (a pending change
-    shows as an arrow, `m → a`), efficiency, mobility, people, food, any other
-    goods, and the ground's resource ratings; where it distributes to and its
-    thresholds, if it has any (also in the sector's hover); and a
+    shows as an arrow, `m → a`), efficiency (Eff), mobility (Mob), people
+    (Civ, Mil and Uw for unfree workers), any goods it holds, and the
+    ground's resource ratings (Ore is the iron rating, Crude the oil rating);
+    food and fertility (Fert) only in a game with food; where it distributes
+    to and its thresholds, if it has any. Hovering over an owned sector shows
+    the same figures under the same labels, in the same order; and a
     **Designate** button that puts `designate x,y ` in the command box (the
     player still sends it);
   - a sector in sight but not owned: its coordinates and "In sight", nothing
@@ -123,8 +132,10 @@ just advances the world (`nation-levels.md` § The update).
     as fresh as the Nation pane, which reloads after each command.
 - **The sector table**, below the map (scroll the map pane down to reach
   it): one row for each sector the player owns, with its coordinates,
-  designation, efficiency, mobility, civilians, military, food and the
-  ground's resource ratings. Clicking a heading sorts by that column;
+  designation, efficiency, mobility, civilians, military, unfree workers,
+  its iron, gold dust and oil, and the ground's resource ratings, in the sector box's
+  order and under its labels. Food and fertility appear only in a game with
+  food. Clicking a heading sorts by that column;
   clicking a coordinate selects that sector on the map. The title above it
   folds it away. It's the same figures `census` prints, laid out to sort;
   `census` also has columns the table doesn't, such as `work` and `avail`.
