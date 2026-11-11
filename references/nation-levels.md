@@ -121,7 +121,7 @@ but they work in two different ways:
   $300), education scaling, bleed, decay and leak, with "easy research"
   fixed at 0.75 and the log base at 2.0 (`info Research`). It does **not** feed technology. Its effects depend on the
   game's options: with `RES_POP` on, it limits how many civilians and
-  uncompensated workers fit in a sector (550 each at research 0, up to
+  unfree workers fit in a sector (550 each at research 0, up to
   1,000), and with plague on (`NO_PLAGUE` off), higher research makes plague
   less likely. In the source defaults both are off, so check `version` or
   `info Options` for this game.
@@ -154,7 +154,7 @@ but they work in two different ways:
 None of this section applies when the game has `NOFOOD` on, which is this
 deployment's default; `version` says.
 
-Civilians, military and uncompensated workers each eat `eatrate` (0.0005)
+Civilians, military and unfree workers each eat `eatrate` (0.0005)
 units of food per ETU, so 1,000 people eat 30 units over a 60-ETU update.
 Agribusinesses (`a`) grow food, scaled by the sector's fertility and
 efficiency, and by technology. A sector self-sufficient in food doesn't need
@@ -164,7 +164,7 @@ food too.
 
 **Starvation** hits any sector that can't cover its people's food at update
 time. The sector first spends half its labor growing emergency rations; if
-it is still short, everyone it can't feed dies, uncompensated workers first,
+it is still short, everyone it can't feed dies, unfree workers first,
 then civilians, then military, and never more than half the people there.
 Starving also sets the sector's work percentage to 0 and makes its civilians
 less loyal. The food stock won't warn you: by the update that shows zero,

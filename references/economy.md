@@ -72,7 +72,7 @@ Fourteen items exist, shared by sectors and units:
 
 civilians, military, shells, guns, petrol, iron ore, gold dust, gold bars,
 food, oil, light construction materials, heavy construction materials,
-uncompensated workers, radioactive material.
+unfree workers, radioactive material.
 
 `show item` prints each item's weight and other stats. A sector holds at most
 9,999 of any one item.
@@ -194,10 +194,10 @@ they compose:
   to keep of one item. The same number is a floor and a ceiling: below it the
   sector imports from its distribution sector, above it the sector exports
   the excess. A threshold of 0 doesn't take effect — it has to be at least 1.
-  Items by letter: `c` civilians, `m` military, `u` uncompensated workers,
+  Items by letter: `c` civilians, `m` military, `u` unfree workers,
   `f` food, `s` shells, `g` guns, `p` petrol, `i` iron ore, `d` gold dust,
   `b` gold bars, `o` oil, `l` lcm, `h` hcm, `r` radioactive material.
-  Civilians, military and uncompensated workers distribute like any other
+  Civilians, military and unfree workers distribute like any other
   item, with extra limits on civilians: the distribution sector never ships
   out its last civilian (or its last military, if it has no civilians); a
   sector whose `work` value (a `census` column) is under 100 does not export
@@ -261,7 +261,7 @@ undergarrisoned conquered sector silently stops sending goods.
 
 ## Taxes and budget
 
-At each update, civilians and uncompensated workers pay tax, scaled by their
+At each update, civilians and unfree workers pay tax, scaled by their
 sector's efficiency (captured civilians pay a quarter); military are paid ten
 times a civilian's tax, reservists a tenth of that; sectors, ships, planes
 and land units have upkeep; and production and construction cost money.

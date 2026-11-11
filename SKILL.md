@@ -25,8 +25,9 @@ This skill is the alternative: a straight path from "never seen this game" to
 **Scope.** This is about the game as a player experiences it — what things
 mean, what commands do, how to read the output. It teaches enough about
 combat, production, and diplomacy to make sound day-to-day decisions, and
-stops there: it does not teach war strategy, opening theory, or how to
-out-think an opponent. It does not cover the server internals, the gateway,
+stops there: beyond the standard first move (explore everything reachable),
+it does not teach war strategy, opening theory, or how to out-think an
+opponent. It does not cover the server internals, the gateway,
 or anything below the command line a player types.
 
 ## Answering a player
@@ -54,6 +55,10 @@ Most uses of this skill are a new player's question. What has worked:
   makes nothing below 60% efficiency. Check those before looking for a bug.
 - **Say what words mean.** A new player doesn't know "BTU", "mobility" or
   "designate"; give the plain meaning the first time a term appears.
+- **Enslavement and nuclear attack get a serious tone** (D-79). Elsewhere
+  the game's voice can be casual, but unfree workers are enslaved people,
+  and converting, shooting or nuking a population is described plainly,
+  without jokes and without lecturing the player.
 - When the skill doesn't settle a question, read the server source
   (§ Checking a fact against the server's source) and say which file the
   answer came from.
@@ -125,7 +130,8 @@ for noise:
   `m` for a map, `h` to stop there.
 - **Printed back.** Give a destination instead of a path (`move c 0,0 20
   2,-2`) and Empire picks the cheapest route and prints it: `Using best path
-  'jjnh', movement cost 0.400`.
+  'jjnh', movement cost 0.400`. It routes only through sectors you own, to a
+  sector you own, so an `explore` into new land needs its path typed out.
 
 On the play page the map is always in view and clicking a sector shows its
 figures; while you're typing a sector into a command, clicking a cell fills
@@ -143,7 +149,7 @@ water. To learn more about land you don't own, see
 ## Your first session
 
 A new country starts with **two sanctuary sectors**, side by side, holding
-1,000 civilians, 55 military and 75 uncompensated workers each. In
+1,000 civilians, 55 military and 75 unfree workers each. In
 sanctuary nobody can attack you, and nothing happens either: your people
 don't eat, work or grow, and most commands — `move`, `map`, `designate`,
 `budget`, `spy` among them — answer `"move" is not a legal command` until you
@@ -163,9 +169,9 @@ After breaking:
 
 1. **Look around.** The map pane shows your two capitals and the land in
    sight of them: open wilderness `-` to expand into, water `.`, mountains
-   `^`. Click a capital to see its people, food and mobility. (The First
-   steps checklist lists `census` and `map`, which print the same things as
-   text in the transcript.)
+   `^`. Click a capital to see its people, food and mobility. Scroll the
+   map pane down for the sector table, a sortable row of figures for every
+   sector you own (`census` prints the same as text).
 2. **`explore`** — moves civilians or military out of a sector you own along
    a path, into unowned land, and claims the sector where they stop. It costs
    the starting sector's mobility, per person moved. This is how territory
@@ -178,6 +184,34 @@ After breaking:
    is no longer yours (`move` asks before it empties one). `explore` needs
    an active capital and a treasury of $0 or more; without either it answers
    `"explore" is not a legal command`.
+
+   **Explore everything you can reach, first thing after `break`.**
+   Experienced players almost always open this way. On an island that means
+   the whole island; on a continent, every sector within a sensible radius of
+   the capitals. Land you own is land nobody else can take quietly, and it is
+   where your economy will come from. Send **one military per sector**, from
+   the capitals: one soldier is enough to claim and keep a sector, and it
+   leaves the civilians at home working. The mobility used is per person
+   moved, so moving one at a time costs little. Empire has no single command
+   for "put one soldier in every sector I can see". The opening is a run of
+   one-line explores, one per sector, each with its whole path typed out:
+
+   ```
+   expl m 0,0 1 gh
+   expl m 0,0 1 ggh
+   expl m 0,0 1 yh
+   expl m 2,0 1 jh
+   expl m 2,0 1 nnh
+   ```
+
+   Work outward in rings, nearest sectors first. A path may run only through
+   sectors you own, so each ring is reached across the one before it. Start
+   every explore from a capital rather than from newly claimed land, which
+   has no mobility until the next update. The path has to be typed:
+   Empire's own route-finding (`expl m 0,0 1 -2,2`) uses only sectors you
+   own, so it can't reach a sector you don't own yet. On the play page the
+   map draws a typed path as you type it, and the up arrow brings back the
+   last line to change its final letters.
 3. **`designate`** — sets what a sector you own is *for* (see Sectors,
    below); it needs no military there. Newly explored land is wilderness,
    which produces nothing; designating it a mine, an agribusiness (food), or
@@ -186,12 +220,286 @@ After breaking:
    one keeps its old letter on the map while the old buildings come down over
    the next updates, and the sector box shows the change pending as an arrow
    (`m → a`).
-4. **Wait for an update.** Efficiency, production and mobility all move only
+
+   **What to designate first.** Explore before choosing, then read the land:
+   click a sector you own and the sector box shows its five resource ratings
+   (iron `min`, `gold`, fertility `fert`, `oil`, uranium `uran`, each 0–100),
+   and the sector table lists them for every sector, sorted by whichever
+   column you click. Output scales with the rating, so put each designation
+   where its rating is high. A sector produces nothing below 60% efficiency,
+   and only its own people build efficiency, so designate the few sectors you
+   can staff now (step 4) rather than everything at once. Building costs no
+   materials (a fortress is the one exception) and $1 per point of
+   efficiency, so $100 a sector. A good first set:
+
+   - **Mines `m`** on the best iron, with **light and heavy manufacturing
+     `j` and `k`** close by. Iron becomes lcm (1 iron each) and hcm (2 iron
+     each), and every ship, plane and land unit is built from them: a
+     frigate takes 30 lcm and 30 hcm, a fishing boat 25 and 15. At tech 0
+     both factories run at half rate.
+   - **An agribusiness `a`** on the most fertile land, if the game uses food
+     (`version`; see Food and survival below). Each capital starts with 550
+     food, about 15 updates of eating for its own people at 60 ETUs an
+     update, and fewer once they grow.
+   - **A harbor `h`** on the coast. Ships are built there, and on an island
+     the next land is over the water.
+   - **A gold mine `g`** where gold is high, with **a bank `b`** to turn its
+     dust into gold bars. A bar costs 5 dust and $10 to make. Kept in the
+     bank, each bar earns $15 an update at 60 ETUs (`bankint`, scaled by
+     the bank's efficiency), so a bar pays for itself within an update and
+     keeps paying. Gold, oil and uranium run out as they're mined; iron and
+     fertility don't.
+
+   **Make the rest highways `+` for now.** Each step of a move costs the
+   mobility of the sector it enters: 0.4 for wilderness, 0.2 for most
+   sectors at 100% efficiency, and almost nothing for a highway at 100%.
+   Designating is free and a highway has no upkeep. Building one up costs
+   the same $1 per point as any sector, and spare civilians get it to 100%
+   in an update or two. Wilderness does nothing, so any sector you haven't
+   found a use for yet is better as a highway, especially one poor in every
+   resource or one that many routes pass through. When you need the land
+   for something else, redesignate it.
+
+   One command does it for every sector still wilderness. It's a good first
+   use of a realm and a selector (`references/syntax-advanced.md`):
+
+   ```
+   desi # ?des=- +
+   ```
+
+   `#` is realm 0, which starts as a rectangle around the capital (8 sectors
+   left, 10 right, 5 up and down). `?des=-` keeps only the sectors whose
+   designation is wilderness, and `designate` skips any sector you don't
+   own. On a larger island, `realm 0 <x1:x2,y1:y2>` first makes realm 0
+   cover the land you hold.
+
+   Later, `improve road` cuts a working sector's step cost to a tenth and
+   leaves its designation alone. A full road network takes 200 lcm and 200
+   hcm (`info improve`).
+
+   The spare capital is the best land you have. Both starting sectors rate
+   100 in every resource (Empire's default, `at_least_one_100`), so it suits
+   whichever product you need most. With its 1,000 people still in it, it is
+   rebuilt as the new type within about an update.
+
+   Some designations do nothing for now:
+   - Shell industries `i`, defense plants `d` and refineries `%` need tech
+     20 before they make anything, and a new country has tech 0. Tech 20 is
+     a long way off: in a short game, such as one between two players,
+     nobody may reach it. With no shells, no gun can fire, on a frigate or
+     anywhere else.
+   - Technical centers `t`, research labs `r`, libraries `l` and parks `p`
+     need gold dust, oil or lcm from sectors that don't exist yet, and pay
+     off only over many updates.
+   - Fortresses `f` defend at twice the strength of most sectors, but they
+     are the one designation that takes materials: 100 hcm and $500 to reach
+     100%, hcm your first ships need. A fortress fires on ships only with
+     guns and shells, which need tech 20. Until then, military in the
+     coastal sectors do most of its job for none of the hcm.
+
+   `references/economy.md` has the full table of what each product needs.
+4. **`move`** civilians from the capitals into the sectors you designated
+   (`move c 0,0 200 nh`). Two numbers set how many:
+   - **A full sector doesn't grow.** 1,000 civilians is the most an ordinary
+     sector holds (a mountain holds 100), and each capital starts with
+     exactly that, so neither has any births. Below the cap, civilians grow
+     by 30% an update at 60 ETUs an update, if there's food for the babies.
+     Moving people out of a capital lets it grow back while they work
+     somewhere useful. Draw mostly on the spare capital: BTUs come from the
+     active capital's civilians, though even half full it refills the BTU
+     cap well within an update (`references/nation-levels.md`).
+   - **About 200 makes a sector productive at the first update.** Each update
+     a sector has 0.6 labor per civilian (at 60 ETUs; a soldier counts as
+     0.4 of a civilian), and half of that can go into efficiency, at 1 point
+     per 2 units of labor. So 200 civilians raise a new sector 60 points an
+     update. It reaches 60% at the first update and produces that same
+     update, then reaches 100% at the second. One soldier left by `explore`
+     builds almost nothing.
+
+   Moving civilians out of a capital is cheap. From a sector at 60%
+   efficiency or more they travel packed ten to a unit, so 200 civilians
+   cost what 20 soldiers would. One step into wilderness costs 8 mobility,
+   and a capital gains 60 mobility an update (one per ETU), up to 127.
+5. **Set up distribution** once the first sectors are designated, so goods
+   and people move at each update without commands. Each sector names one
+   distribution sector (`distribute`), and for each item you set a
+   threshold (`threshold`): the stock the sector keeps. Below the threshold
+   the sector imports from its distribution sector, and above it the sector
+   exports the surplus there. Most players start with one hub that every
+   other sector trades with.
+
+   **What happens at an update** (`update/finish.c` and `update/distribute.c`):
+   - **Nothing moves when you type the commands.** Distribution runs once
+     each update, almost last: after taxes and growth, production and
+     building ships. The next update after you set it is the first that
+     uses it.
+   - **Goods go all the way in one update.** Every sector first sends its
+     surplus straight to the hub along the cheapest path through land you
+     own, however far that is. Then every sector draws what it's short of
+     straight from the hub. All the sending happens before any drawing, so
+     goods go from producer to hub to consumer in the same update. (`deliver`
+     is different: it moves goods one sector per update.)
+   - **Each link in a chain adds an update**, because goods are used at the
+     update after they arrive. Iron mined at one update reaches the factory
+     at the end of that update and becomes lcm at the next. That lcm
+     reaches the harbor the same update and goes into a ship at the one
+     after. Once running, every link works every update.
+   - **Who pays the mobility:** the sending sector pays for what it sends to
+     the hub, and **the hub pays for everything other sectors draw from
+     it**. The cost is a tenth of what a `move` would be: path cost × the
+     item's weight ÷ its packing ÷ 10. A sector short of mobility moves only
+     what it can pay for, and one with none moves nothing. Sectors are
+     handled left to right and top to bottom, so when the hub runs short,
+     the sectors handled last go without. New mobility arrives after
+     distribution, so the hub can spend only what it had left.
+   - **Nothing moves at all while your money is below $0.**
+
+   **Packing makes the hub matter.** Civilians travel packed ten to a unit
+   from any sector at 60% efficiency or more. Goods (iron, lcm, hcm, food,
+   gold dust) pack ten to a unit only in a warehouse `w` or harbor `h` at
+   60% or more, and goods sent *into* one get its packing too. Drawing 200
+   iron along a path costing 0.4 costs a capital hub 8 mobility, and a
+   warehouse hub 0.8.
+
+   **Choosing the hub.** Start with the active capital. It is near the
+   middle of your land and holds the civilians, so `distribute * 0,0` is
+   enough at first; the capital's own setting just clears. Do hand moves
+   from the spare capital and leave the hub's mobility for distribution.
+   Once a warehouse near the middle of your land reaches 60%, make it the
+   hub: `distribute * <warehouse>`. A sector has only one distribution
+   sector for every item, so new sectors then draw civilians from the
+   warehouse too. Feed it by giving the capital a civilian threshold to
+   keep, for example `threshold c 0,0 600`: the capital then sends its
+   civilians above 600 to the warehouse at each update. A sector sends
+   civilians only while its `work` is 100.
+
+   **Setting thresholds.** A threshold is both a floor and a ceiling, and it
+   has to be at least 1 to do anything:
+   - **Producers** get a threshold of 1 on what they make, so they send all
+     but one to the hub. A mine with a hub but no iron threshold keeps
+     everything it makes.
+   - **Consumers** get a threshold of about what they use in an update,
+     plus some to spare. At 60 ETUs an update, a factory with 200
+     civilians at 100% uses up to about 120 iron an update. At tech 0 it
+     makes about 60 lcm or 30 hcm from that. A mine with 200 civilians at
+     100% and an iron rating of 80 makes about 96 iron. So roughly one mine
+     keeps one factory busy.
+   - **Civilians:** `threshold c <sector> 200` keeps a designated sector
+     staffed from the hub.
+   - **Food**, in a game with food: give the agribusiness a threshold of 1.
+     Give every other sector about three updates' eating: at 60 ETUs an
+     update a person eats 0.03 food, so a sector of 200 needs 6 an update
+     and a threshold of about 20.
+
+   A first setup, with the active capital as the hub:
+
+   ```
+   distribute * 0,0        every sector trades with 0,0
+   threshold i 3,1 1       the mine at 3,1 keeps 1 iron and sends the rest to 0,0
+   threshold i 5,1 150     the factory at 5,1 draws up to 150 iron from 0,0
+   threshold l 5,1 1       ... and sends its lcm there
+   threshold c 3,1 200     the mine draws civilians from 0,0 up to 200
+   threshold c 5,1 200     ... and so does the factory
+   ```
+
+   A sector designated later needs its own `distribute` and thresholds.
+   `level` shows every sector's settings, and the update telegrams report
+   a sector with "No path to dist sector". `references/economy.md`
+   § Distribution network has the rest of the rules and more patterns.
+
+   **What each sector uses and makes.** At each update, every sector at 60%
+   efficiency or more makes its product from its own stock and its people's
+   labor. Nobody has to give an order: iron in a light manufacturing sector
+   becomes lcm by itself. The early-game types:
+
+   | Sector | Uses, per unit made | Makes | Send the output to |
+   |---|---|---|---|
+   | mine `m` | labor | iron, scaled by the iron rating `min`; never runs out | `j` and `k` |
+   | gold mine `g` | labor | gold dust, scaled by `gold`; the deposit runs down | a bank |
+   | agribusiness `a` | labor | 9 food per unit of labor, scaled by `fert`; half rate at tech 0 | every sector with people, in a game with food |
+   | oil field `o` | labor | oil, scaled by the oil rating; runs down; half rate at tech 0 | nothing early; later technical centers, refineries |
+   | light manufacturing `j` | 1 iron | lcm; half rate at tech 0 | the harbor |
+   | heavy manufacturing `k` | 2 iron | hcm; half rate at tech 0 | the harbor |
+   | bank `b` | 5 gold dust, $10 | gold bars, which earn interest while they stay there | keep them in the bank |
+   | enlistment center `e` | civilians | military, up to half the civilians there | wherever soldiers are needed |
+   | library `l`, park `p` | 1 lcm, $9 | education, happiness (national levels) | — |
+   | technical center `t` | 1 gold dust, 5 oil, 10 lcm, $300 | technology; needs education 5 | — |
+   | capital `c` | $60 upkeep an update at 60 ETUs | BTUs, from its civilians | — |
+   | harbor `h`, warehouse `w` | — | nothing; goods pack ten to a unit there, and ships are built in a harbor | — |
+   | highway `+`, fortress `f` | — | nothing | — |
+
+   Labor per unit is 1 for most products, 2 for hcm, 5 for a bar and 16 for
+   technology. At low tech nothing else uses lcm or hcm: land units need
+   tech 30 and planes tech 50, and building a sector up needs no materials
+   except for a fortress. Later uses are roads (`improve road`, 200 of each
+   for a full network) and bridges (100 hcm and $1,000, at tech 10).
+
+   **Looking it up in a game.** A game can change these tables, so check
+   with `show`, which costs no BTUs:
+   - `show product`: each product's inputs, money cost per unit, the
+     resource it depletes, and its production rate as a formula of the
+     national level, for example `(tech+10)/(tech+20)` for lcm.
+   - `show sect capabilities`: which product each sector type makes, and
+     its multiplier (agribusiness 900%).
+   - `show sect build`: what building a sector to 100% costs, and its
+     upkeep; also the per-point cost of roads and rails.
+   - `show sect stats`: mobility cost, defense, packing and population cap
+     by type.
+
+   **Building things: ships, and later land units and planes.** These you
+   order with `build`, and they take materials from the sector they're
+   built in. Look up the costs with `show ship build` (lcm, hcm, labor,
+   tech and money), `show ship cap` (what each can carry) and `show ship
+   stats` (armor, speed, range); `show land` and `show plane` take the same
+   `build`, `stats` and `capabilities` words. `show` lists only types your
+   tech allows, or nearly allows, so at tech 0 it lists exactly the ships
+   you can build:
+
+   | Ship | lcm | hcm | Labor | $ | Carries |
+   |---|---|---|---|---|---|
+   | fishing boat `fb` | 25 | 15 | 75 | 180 | 300 civilians, 10 military, 900 food, 15 unfree workers; catches food at sea |
+   | slave ship `ss` | 60 | 40 | 160 | 300 | 20 civilians, 80 military, 200 food, 1,200 unfree workers |
+   | frigate `frg` | 30 | 30 | 110 | 600 | 60 military, 10 shells, 2 guns, 60 food; can land troops with `assault` |
+
+   **Ships are built from the harbor's own stock.** `build` needs the harbor
+   at 60% efficiency or more. It starts the ship at 20%, using a fifth of
+   its lcm, hcm and labor at once, and at each update the ship builds
+   further from what the harbor holds and from its people's labor. So keep
+   a stock at the harbor, with the harbor distributing to the hub like any
+   other sector: `threshold l <harbor> 50` and `threshold h <harbor> 50`.
+6. **`budget`** — previews what the next update will earn and spend, in the
+   Budget pane (1 BTU). A country whose money goes below $0 stops building
+   and producing partway through the update. At 60 ETUs an update, a
+   civilian pays up to $0.50 in tax, scaled by the sector's efficiency (none
+   at all in a sector still at 0%), and every soldier costs $5 in pay. That
+   is another reason to explore with one soldier each and to build sectors
+   up quickly.
+7. **Wait for an update.** Efficiency, production and mobility all move only
    at updates; the Game clock counts down to the next one.
 
-That's enough to leave sanctuary, see what you have, claim more land, and
-start pointing sectors at something productive. The rest of this skill fills
-in the concepts behind those steps.
+### Every update after that
+
+A short routine keeps a young country growing:
+
+1. **Read what happened.** Read the turn divider in the transcript,
+   telegrams in Messages, the News pane, and the Warnings pane (starvation,
+   in a game with food).
+2. **Run `budget`** and check money is going up, or at least not
+   running out.
+3. **Scan the sector table:**
+   - designated sectors climbing toward 60% efficiency;
+   - capitals or other sectors at 1,000 civilians, which have stopped
+     growing and should send people out;
+   - goods piling up somewhere they aren't used.
+4. **Spend the capitals' mobility.** A sector gains 60 an update and stops
+   at 127, so mobility left unspent for two updates is lost. Use it to
+   explore, move civilians and move goods.
+5. **Claim and designate.** Explore anything newly in reach, designate the
+   sectors you can staff, and give them a `distribute` and thresholds.
+
+That's enough to leave sanctuary, claim the land around you, point it at
+something productive, and keep it growing. The rest of this skill fills in
+the concepts behind those steps.
 
 ## Specifying sectors and units
 
@@ -243,8 +551,9 @@ Every sector's population is one of three items:
   there, the sector won't send goods out by delivery or distribution, and
   disloyal civilians may revolt. Sectors you founded yourself need no
   garrison for this.
-- **uw** — uncompensated workers. They work and eat like civilians and pay
-  about a fifth of a civilian's tax.
+- **uw** — unfree workers: people who have been enslaved, most often
+  conquered civilians put through `convert`. They work and eat like
+  civilians and pay about a fifth of a civilian's tax.
 
 ## Mobility, BTUs, and ETL — the three budgets
 
@@ -294,11 +603,11 @@ Whether people eat at all is a game option. With `NOFOOD` on, nobody needs
 food and starvation never happens; it is **on by default in this deployment's
 games**, and `version` says which way a game is set.
 
-In a game with food, every civilian, soldier and uncompensated worker in a
+In a game with food, every civilian, soldier and unfree worker in a
 sector eats at each update, out of food grown by agribusinesses (`a`) and
 moved to where it's needed. A sector short of food first spends half its
 labor growing emergency rations; if that still isn't enough, people starve —
-uncompensated workers first, then civilians, then military, up to half the
+unfree workers first, then civilians, then military, up to half the
 sector's people. Starving also drops the sector's work percentage to 0, so it
 produces almost nothing for several updates afterward. Keep an eye on food
 stockpiles the way you'd keep an eye on money — running out isn't a warning,
@@ -394,7 +703,7 @@ effects of each level are in `references/diplomacy-and-communication.md`.
 ## The play screen
 
 Players use Empire through a web page: a sidebar of panes (game clock,
-command help, messages, nation, news and relations, first steps, warnings,
+command help, first steps, messages, nation, news and relations, warnings,
 budget), a map with a sector box beside it, the transcript of Empire's
 output, and a command box. The site fills most panes itself with reads that
 cost no BTUs; the Budget pane waits for the player to run `budget`, because

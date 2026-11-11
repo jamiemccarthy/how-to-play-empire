@@ -51,34 +51,34 @@ build things, etc.).
 ### Reserves
 
 The reserve is one country-wide number of people (`nation` and `budget`
-show it), not men standing in a sector. Two commands move people in and out
-of it:
+show it), not troops standing in a sector. Two commands move people in and
+out of it:
 
 - `demobilize <SECTS> <NUMBER>` turns military back into civilians in the
   sectors you name. It asks "New civilians on active reserve? (y/n)"; answer
-  `y` and the same number is added to the reserve. It costs $5 per man, is
+  `y` and the same number is added to the reserve. It costs $5 per soldier, is
   refused while the country is broke, and skips sectors under 60% efficiency
   or that you conquered rather than founded. A negative number leaves that
   many military in each sector and demobilizes the rest.
-- `enlist <SECTS> <NUMBER>` turns civilians into military, drawing the men
+- `enlist <SECTS> <NUMBER>` turns civilians into military, drawing them
   from the reserve. With an empty reserve it prints "No military reserves
   left" and does nothing. It works in any sector you founded that has
   civilians, not only enlistment centers. At most half a sector's civilians
-  and 500 men per sector can be drafted per command, and `enlist` won't take
+  and 500 people per sector can be drafted per command, and `enlist` won't take
   a sector above 999 military. A sector whose hidden loyalty number is above
   70 (`nation-levels.md` § The four national levels, Happiness) refuses:
   "civilians refuse to report". A negative number sets a quota: `enlist *
   -100` brings each sector up to 100 military. Each sector's mobility drops
   by the fraction of its civilians drafted, and the command costs an extra
-  BTU per 50 men enlisted.
+  BTU per 50 enlisted.
 
 The only way to put people into the reserve is `demobilize` with `y`. A new
 country starts with an empty reserve, so `enlist` does nothing until you
 have demobilized some military into it. Demobilizing a sector's military
-just to enlist them elsewhere moves men between sectors for $5 each; if what
+just to enlist them elsewhere moves troops between sectors for $5 each; if what
 you want is more military overall, use enlistment centers instead.
 
-Reservists are paid a tenth of what active military are, so holding men in
+Reservists are paid a tenth of what active military are, so holding people in
 the reserve is cheap. The reserve shrinks about 1% per 24 ETUs.
 
 **Enlistment centers** (`e` designation) work separately from the reserve.
@@ -102,7 +102,10 @@ upward:
   and putting them ashore.
 - **Warships** — frigates (buildable at tech 0), patrol boats, destroyers,
   light and heavy cruisers, battleships and battlecruisers, and later
-  missile, anti-aircraft and aegis cruisers.
+  missile, anti-aircraft and aegis cruisers. Guns fire only with shells,
+  which need tech 20 to make. Until then a frigate is a transport for up to
+  60 military that can put them ashore with `assault` (its `semi-land`
+  flag), not a gun platform.
 - **Submarines** — torpedo attack from hiding; later missile and nuclear
   subs.
 - **Carriers** — light, fleet and nuclear, carrying and launching planes.
